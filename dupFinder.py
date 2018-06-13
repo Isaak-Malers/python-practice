@@ -1,5 +1,8 @@
 #import random for building randomized test cases:
 import random
+import time
+
+
 
 #this will generate an array and solution randomly
 def arrayGenerator(length):
@@ -17,7 +20,7 @@ def arrayGenerator(length):
 
 
 #this is the actual algorithm:
-def dupFinder(array):
+def huntAndPeck(array):
 	pointer = 0
 	while True:
 		#print array
@@ -28,20 +31,55 @@ def dupFinder(array):
 		array[pointer] = None
 		pointer = temp
 
-def runSample(tests, size):
+#addition method:
+def numericAddition(array):
+	total = sum(array)
+	expected = (len(array)/2) * (1 + len(array)-2)
+	return total-expected
+
+#hashmap method:
+def makeHashmap(array):
+	#interestingly, pre-alocating the hasmap worsens performance in python...
+	#checking if a key is IN a hashmap and growing it dynamically is the fastests solution.
+	intermediate = {i: 1 for i in range(len(array))}
+	for value in array:
+		if intermediate[value] == 2:
+			return value
+		else:
+			intermediate[value] = 2
+
+def orderHunt(array):
+	sort = sorted(array)
+	for i in range(0, len(sort)):
+		if(sort[i] == sort[i+1]):
+			return sort[i]
+
+
+
+def runSample(tests, size, function):
 	print ""
-	print "running 5000 randomly generated tests on larger datasets, only failures will print:"
-	for i in range(0, 5000):
-		seed = arrayGenerator(5000)
+	print "running " + str(tests) + " random tests with length " + str(size) + ":"
+	print "using:  " + function.__name__
+
+	timeTracker = 0
+
+	for i in range(0, tests):
+		seed = arrayGenerator(size)
 		array = list(seed[1])
 		answer = seed[0]
 
-		caluclated = dupFinder(array)
+		start = time.time()
+		caluclated = function(array)
+		end = time.time()
+
+		timeTracker = timeTracker + (end-start)
 
 		if(caluclated != answer):
 			print "failed for:"
 			print seed
 			print "returned: " + str(caluclated)
+
+	print "total computation time: " + str(timeTracker)
 
 
 array1 = [1, 2, 2]
@@ -53,17 +91,58 @@ array3 = [2, 2, 1]
 badCase = [3, 1, 4, 2, 2]
 veryGoodCase = [1, 1, 10, 9, 8, 7, 6, 5, 4, 3, 2]
 
-print "running some explicit tests"
-print array1
-print dupFinder(array1)
-print array2
-print dupFinder(array2)
-print array3
-print dupFinder(array3)
-print badCase
-print dupFinder(badCase)
-print veryGoodCase
-print dupFinder(veryGoodCase)
+
+
+
+
+#Some performance metrics, in seconds, my virtual machine has 6GB ram, and 6 cores of a corei7:
+#Interestingly, even though all the algorithms have similar complexity in theory,
+#numeric-addition outperformes the others by a MASSIVE margin.
+
+
+#other cool stuff:
+#hunt-and-peck = 100% CPU bound.
+#numeric-addition = 100% CPU bound.
+#hash-map = memory bound (likely due to python limitation?)
+#sorting = 100% CPU bound
+
+
+#500000 samples, 20 long each:
+#hunt-and-peck:     2.94
+#numeric-addition:   .75
+#hash-map:          2.42
+#orderHunt:         3.68
+
+#50000 samples, 200 long each:
+#hunt-and-peck:     2.63
+#numeric-addition:   .24
+#hash-map:          2.17        
+#orderHunt:         4.52
+
+#5000 samples, 2000 long each:
+#hunt-and-peck:     2.67
+#numeric-addition:   .18
+#hash-map:          2.01
+#orderHunt:         7.16
+
+#500 samples, 20000 long each:
+#hunt-and-peck:     2.59
+#numeric-addition:   .18
+#hash-map:          3.15
+
+#50 samples, 200000 long each:
+#hunt-and-peck:     2.80
+#numeric-addition:   .19
+#hash-map:          3.20
+
+#5 samples, 2000000 long each:
+#hunt-and-peck:     4.09
+#numeric-addition:   .30
+#hash-map:          3.23    
+
 
 #Uncomment to run a big sample:
-#runSample(500, 500)
+runSample(50000, 200, huntAndPeck)
+runSample(50000, 200, numericAddition)
+runSample(50000, 200, makeHashmap)
+runSample(50000, 200, orderHunt)
