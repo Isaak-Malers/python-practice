@@ -101,10 +101,13 @@ veryGoodCase = [1, 1, 10, 9, 8, 7, 6, 5, 4, 3, 2]
 
 
 #other cool stuff:
-#hunt-and-peck = 100% CPU bound.
-#numeric-addition = 100% CPU bound.
-#hash-map = memory bound (likely due to python limitation?)
-#sorting = 100% CPU bound
+#hunt-and-peck = CPU bound
+#numeric-addition = CPU bound
+#hash-map = Memory bound
+#sorting = CPU bound
+
+#I'm not really sure why the hash-map method is memory bound.
+
 
 
 #500000 samples, 20 long each:
