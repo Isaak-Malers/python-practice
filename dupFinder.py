@@ -1,10 +1,7 @@
+#import random for building randomized test cases:
 import random
 
-# best case
-array1 = [1, 1, 2]
-
-
-
+#this will generate an array and solution randomly
 def arrayGenerator(length):
 	#build an output
 	out = []
@@ -20,31 +17,37 @@ def arrayGenerator(length):
 	return [duplicate, out]
 
 
-
+#this is the actual algorithm:
 
 def dupFinder(array):
 	pointer = 0
 	while True:
-		print array
-		#do logic here:
-		#print pointer
-		#if we have found our "special number"
 		if array[pointer]  == None:
-			#print "found None"
 			return pointer
 
-		#if we haven't found our special number, set pointer to the value of anArray:
 		temp = array[pointer]
 		array[pointer] = None
 		pointer = temp
 
 
+
+array1 = [1, 2, 2]
+array2 = [2, 1, 2]
+array3 = [2, 2, 1]
+
+
+print "running some explicit tests"
+print array1
 print dupFinder(array1)
+print array2
+print dupFinder(array2)
+print array3
+print dupFinder(array3)
 
-
-"""
-for i in range(0, 50000):
-	seed = arrayGenerator(5)
+print ""
+print "running 5000 randomly generated tests on larger datasets, only failures will print:"
+for i in range(0, 5000):
+	seed = arrayGenerator(5000)
 	array = list(seed[1])
 	answer = seed[0]
 
@@ -54,4 +57,3 @@ for i in range(0, 50000):
 		print "failed for:"
 		print seed
 		print "returned: " + str(caluclated)
-"""
