@@ -2,9 +2,9 @@
 import random
 import time
 #this is an array with the first million primes.  Not an ideal thing to have laying around.
-from rainbow import primes
+#from rainbow import primes
 #here is a shorter list of primes, for running small tests:
-#primes = [2,3,5,7,11,13,17,19,23,29,31,37,41,43,47,53,59,61,67,71,73,79,83,89,97,101,103,107,109,113,127,131,137,139,149]
+primes = [2,3,5,7,11,13,17,19,23,29,31,37,41,43,47,53,59,61,67,71,73,79,83,89,97,101,103,107,109,113,127,131,137,139,149]
 
 
 #this will generate an array and solution randomly
@@ -46,6 +46,10 @@ def primeHack(array):
 
 #addition method:
 def numericAddition(array):
+	#curious if not using the sum method impacts performance greatly:
+	total = 0
+	for value in array:
+		total = total+value
 	total = sum(array)
 	expected = (len(array)/2) * (1 + len(array)-2)
 	return total-expected
@@ -105,8 +109,10 @@ array3 = [2, 2, 1]
 badCase = [3, 1, 4, 2, 2]
 veryGoodCase = [1, 1, 10, 9, 8, 7, 6, 5, 4, 3, 2]
 
-runSample(500, 20000, primeHack)
-
+runSample(100, 100000, huntAndPeck)
+runSample(100, 100000, numericAddition)
+runSample(100, 100000, makeHashmap)
+runSample(100, 100000, orderHunt)
 
 
 #Some performance metrics, in seconds, my virtual machine has 6GB ram, and 6 cores of a corei7:
@@ -119,9 +125,11 @@ runSample(500, 20000, primeHack)
 #numeric-addition = CPU bound
 #hash-map = Memory bound
 #sorting = CPU bound
+#primeHack = Memory bound
 
 #I'm not really sure why the hash-map method is memory bound.
-
+#The primehack method appears to be memory bound, 
+#I suspect this is due to the large number handling in python being memory hard.
 
 
 #500000 samples, 20 long each:
@@ -160,10 +168,3 @@ runSample(500, 20000, primeHack)
 #hunt-and-peck:     4.09
 #numeric-addition:   .30
 #hash-map:          3.23    
-
-
-#Uncomment to run a big sample:
-#runSample(1, 100000000, huntAndPeck)
-#runSample(1, 100000000, numericAddition)
-#runSample(1, 100000000, makeHashmap)
-#runSample(1, 100000000, orderHunt)
