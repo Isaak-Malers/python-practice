@@ -1,7 +1,10 @@
 #import random for building randomized test cases:
 import random
 import time
-
+#this is an array with the first million primes.  Not an ideal thing to have laying around.
+from rainbow import primes
+#here is a shorter list of primes, for running small tests:
+#primes = [2,3,5,7,11,13,17,19,23,29,31,37,41,43,47,53,59,61,67,71,73,79,83,89,97,101,103,107,109,113,127,131,137,139,149]
 
 
 #this will generate an array and solution randomly
@@ -24,12 +27,22 @@ def huntAndPeck(array):
 	pointer = 0
 	while True:
 		#print array
-		if array[pointer]  == None:
+		if array[pointer] < 0:
 			return pointer
 
 		temp = array[pointer]
-		array[pointer] = None
+		array[pointer] = -array[pointer]
 		pointer = temp
+
+
+#using a rainbow table of primes, we can hopefully get it even faster:
+def primeHack(array):
+	product = 1
+	for value in array:
+		if(product % primes[value] == 0):
+			return value
+		product = product * primes[value]
+
 
 #addition method:
 def numericAddition(array):
@@ -40,7 +53,7 @@ def numericAddition(array):
 #hashmap method:
 def makeHashmap(array):
 	#interestingly, pre-alocating the hasmap worsens performance in python...
-	#checking if a key is IN a hashmap and growing it dynamically is the fastests solution.
+	#checking if a key is IN a hashmap and growing it dynamically is the fastest solution.
 	intermediate = {i: 1 for i in range(len(array))}
 	for value in array:
 		if intermediate[value] == 2:
@@ -55,7 +68,8 @@ def orderHunt(array):
 			return sort[i]
 
 
-
+#given a number of sets to run, the length of those sets, and a function:
+#records performance metrics about how a function handles the problem.
 def runSample(tests, size, function):
 	print ""
 	print "running " + str(tests) + " random tests with length " + str(size) + ":"
@@ -91,7 +105,7 @@ array3 = [2, 2, 1]
 badCase = [3, 1, 4, 2, 2]
 veryGoodCase = [1, 1, 10, 9, 8, 7, 6, 5, 4, 3, 2]
 
-
+runSample(500, 20000, primeHack)
 
 
 
@@ -115,23 +129,27 @@ veryGoodCase = [1, 1, 10, 9, 8, 7, 6, 5, 4, 3, 2]
 #numeric-addition:   .75
 #hash-map:          2.42
 #orderHunt:         3.68
+#primeHack:         3.14
 
 #50000 samples, 200 long each:
 #hunt-and-peck:     2.63
 #numeric-addition:   .24
 #hash-map:          2.17        
 #orderHunt:         4.52
+#primeHack:         7.11
 
 #5000 samples, 2000 long each:
 #hunt-and-peck:     2.67
 #numeric-addition:   .18
 #hash-map:          2.01
 #orderHunt:         7.16
+#primeHack:        39.85
 
 #500 samples, 20000 long each:
 #hunt-and-peck:     2.59
 #numeric-addition:   .18
 #hash-map:          3.15
+#primeHack:       Longer than I care to wait.
 
 #50 samples, 200000 long each:
 #hunt-and-peck:     2.80
@@ -145,7 +163,7 @@ veryGoodCase = [1, 1, 10, 9, 8, 7, 6, 5, 4, 3, 2]
 
 
 #Uncomment to run a big sample:
-runSample(50000, 200, huntAndPeck)
-runSample(50000, 200, numericAddition)
-runSample(50000, 200, makeHashmap)
-runSample(50000, 200, orderHunt)
+#runSample(1, 100000000, huntAndPeck)
+#runSample(1, 100000000, numericAddition)
+#runSample(1, 100000000, makeHashmap)
+#runSample(1, 100000000, orderHunt)
